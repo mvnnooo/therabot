@@ -1,3 +1,9 @@
+# تعديل أساليب العلاج
+therapy_styles = {
+    "supportive": [...],
+    "cbt": [...],
+    "mindfulness": [...]
+}
 """
 Therapist Response Engine
 LLM-ready response generation logic
