@@ -1,3 +1,7 @@
+# تكوين Redis
+redis_host = "localhost"
+redis_port = 6379
+# أو استخدام التخزين في الذاكرة
 """
 User Memory and Session Management Module
 """
