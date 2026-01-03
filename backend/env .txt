@@ -1,38 +1,14 @@
-# إعدادات التطبيق
-APP_NAME=TheraBot
-APP_VERSION=1.0.0
-APP_ENV=development
-DEBUG=True
+# إعدادات MySQL البعيدة على PythonAnywhere
+DB_HOST=mvnnooo.mysql.pythonanywhere-services.com
+DB_USER=mvnnooo  # اسم المستخدم الخاص بك
+DB_PASSWORD=your_password_here  # كلمة المرور الخاصة بك
+DB_NAME=mvnnooo$therabot_db  # اسم قاعدة البيانات (لاحظ علامة $)
+DB_PORT=3306
 
-# إعدادات الخادم
-HOST=0.0.0.0
-PORT=8000
-WORKERS=4
+# إعدادات Redis (إذا لم تستخدم، ضع تعليقاً)
+# REDIS_HOST=localhost
+# REDIS_PORT=6379
 
-# قواعد البيانات
-REDIS_HOST=localhost
-REDIS_PORT=6379
-REDIS_PASSWORD=
-
-# الأمان
-SECRET_KEY=your-secret-key-here-change-in-production
-JWT_ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-
-# حدود API
-MAX_MESSAGE_LENGTH=2000
-RATE_LIMIT_PER_MINUTE=60
-SESSION_TIMEOUT_MINUTES=30
-
-# موارد الطوارئ (مصر)
-EMERGENCY_PHONE=122
-AMBULANCE_PHONE=123
-MENTAL_HEALTH_HOTLINE=08008880700
-CHILD_PROTECTION_HOTLINE=16000
-WOMEN_PROTECTION_HOTLINE=15115
-
-# إعدادات LLM (إذا كنت تستخدم)
-OPENAI_API_KEY=
-OPENAI_MODEL=gpt-4
-OPENAI_TEMPERATURE=0.7
-OPENAI_MAX_TOKENS=500
+# إعدادات إضافية
+APP_ENV=production
+DEBUG=False
