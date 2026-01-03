@@ -1,32 +1,675 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<title>TheraBot</title>
-<style>
-body { font-family: Arial; background:#111; color:#eee; padding:20px }
-input, button { padding:10px; margin:5px }
-#chat { white-space:pre-wrap; margin-top:15px }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TheraBot - مساعد العلاج النفسي الذكي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --primary-dark: #3a5984;
+            --secondary: #6d9dc5;
+            --accent: #ff7e5f;
+            --safe: #4CAF50;
+            --warning: #FF9800;
+            --danger: #F44336;
+            --crisis: #D32F2F;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gray: #6c757d;
+            --border-radius: 12px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+        }
+
+        /* Header */
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--secondary);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            color: var(--accent);
+        }
+
+        .logo-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .logo-text p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--safe);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 300px;
+            background: var(--light);
+            border-left: 1px solid #ddd;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .session-info, .safety-info, .therapy-info {
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--secondary);
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--accent);
+        }
+
+        .info-item {
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .info-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .info-value {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .safety-level {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .safety-safe { background: #d4edda; color: var(--safe); }
+        .safety-warning { background: #fff3cd; color: var(--warning); }
+        .safety-danger { background: #f8d7da; color: var(--danger); }
+        .safety-crisis { background: #f5c6cb; color: var(--crisis); }
+
+        .therapy-style {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f0f8ff;
+            border-radius: 8px;
+            border-right: 4px solid var(--secondary);
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 15px 20px;
+            border-radius: 20px;
+            line-height: 1.5;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-message {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+
+        .bot-message {
+            background: white;
+            color: var(--dark);
+            align-self: flex-start;
+            border: 1px solid #ddd;
+            border-bottom-left-radius: 5px;
+        }
+
+        .crisis-message {
+            background: #fff3f3;
+            border: 2px solid var(--crisis);
+            border-left: 6px solid var(--crisis);
+            animation: crisisPulse 1.5s infinite;
+        }
+
+        @keyframes crisisPulse {
+            0% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(244, 67, 54, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0); }
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        /* Crisis Resources */
+        .crisis-resources {
+            background: #fff8e1;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-top: 15px;
+            border-right: 4px solid var(--warning);
+            display: none;
+        }
+
+        .crisis-resources.show {
+            display: block;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .resources-title {
+            color: var(--warning);
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .resource-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #ffeaa7;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .resource-item:last-child {
+            border-bottom: none;
+        }
+
+        .resource-icon {
+            color: var(--danger);
+            font-size: 1.2rem;
+        }
+
+        /* Input Area */
+        .input-area {
+            display: flex;
+            gap: 10px;
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #ddd;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #ddd;
+            border-radius: 30px;
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
+            resize: none;
+            min-height: 60px;
+            max-height: 120px;
+        }
+
+        .message-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.2);
+        }
+
+        .send-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .send-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .send-button:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--light);
+            padding: 15px 30px;
+            text-align: center;
+            border-top: 1px solid #ddd;
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .disclaimer {
+            color: var(--danger);
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 300px;
+                border-left: none;
+                border-top: 1px solid #ddd;
+                order: 2;
+            }
+            
+            .chat-area {
+                order: 1;
+                height: 60vh;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .logo {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: none;
+            align-self: flex-start;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+        }
+
+        .typing-indicator.show {
+            display: block;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--gray);
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+    </style>
 </head>
 <body>
-<h2>TheraBot – AI Therapist</h2>
-<input id="msg" placeholder="Type here..." />
-<button onclick="send()">Send</button>
-<div id="chat"></div>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>TheraBot</h1>
+                    <p>مساعد العلاج النفسي الذكي - مع طبقة الأمان المتكاملة</p>
+                </div>
+            </div>
+            <div class="status-indicator">
+                <div class="status-dot" id="statusDot"></div>
+                <span id="statusText">متصل وجاهز</span>
+            </div>
+        </header>
 
-<script>
-async function send(){
-  const msg = document.getElementById("msg").value;
-  const res = await fetch("http://localhost:8000/chat",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({user_id:"demo", message:msg})
-  });
-  const data = await res.json();
-  document.getElementById("chat").innerText += "\nYou: "+msg+"\nBot: "+data.reply+"\n";
-}
-</script>
-</body>
-</html>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="session-info">
+                    <h3 class="section-title">
+                        <i class="fas fa-user-clock"></i>
+                        معلومات الجلسة
+                    </h3>
+                    <div class="info-item">
+                        <span class="info-label">رقم الجلسة:</span>
+                        <span class="info-value" id="sessionId">جاري التوليد...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">مدة الجلسة:</span>
+                        <span class="info-value" id="sessionDuration">00:00</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">عدد الرسائل:</span>
+                        <span class="info-value" id="messageCount">0</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">تاريخ البدء:</span>
+                        <span class="info-value" id="sessionStart">--:--</span>
+                    </div>
+                </div>
+
+                <div class="safety-info">
+                    <h3 class="section-title">
+                        <i class="fas fa-shield-alt"></i>
+                        حالة الأمان
+                    </h3>
+                    <div class="info-item">
+                        <span class="info-label">المستوى الحالي:</span>
+                        <span class="safety-level safety-safe" id="safetyLevel">آمن</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">الكلمات المفتاحية:</span>
+                        <span class="info-value" id="safetyKeywords">لا يوجد</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">الثقة:</span>
+                        <span class="info-value" id="safetyConfidence">100%</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">حالة الكشف:</span>
+                        <span class="info-value" id="crisisStatus">لا يوجد أزمة</span>
+                    </div>
+                </div>
+
+                <div class="therapy-info">
+                    <h3 class="section-title">
+                        <i class="fas fa-brain"></i>
+                        نمط العلاج
+                    </h3>
+                    <div class="info-item">
+                        <span class="info-label">النمط الحالي:</span>
+                        <span class="info-value" id="therapyStyle">داعم</span>
+                    </div>
+                    <div id="therapyTechniques">
+                        <div class="therapy-style">
+                            <i class="fas fa-comments"></i>
+                            <span>الاستماع النشط والتعاطف</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Chat Area -->
+            <section class="chat-area">
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Welcome Message -->
+                    <div class="message bot-message">
+                        <div class="message-text">
+                            مرحباً! أنا TheraBot، مساعدك للصحة النفسية. 
+                            <br><br>
+                            أنا هنا لأستمع إليك وأقدم الدعم النفسي الأولي. تذكر أنني:
+                            <br>
+                            • لست بديلاً عن الطبيب النفسي
+                            <br>
+                            • أحافظ على خصوصيتك وسريتك
+                            <br>
+                            • لدي أنظمة أمان للكشف عن الأزمات
+                            <br><br>
+                            كيف يمكنني مساعدتك اليوم؟
+                        </div>
+                        <div class="message-time" id="welcomeTime"></div>
+                    </div>
+                </div>
+
+                <!-- Crisis Resources (Hidden by default) -->
+                <div class="crisis-resources" id="crisisResources">
+                    <div class="resources-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        موارد المساعدة في الأزمات
+                    </div>
+                    <div class="resource-item">
+                        <i class="fas fa-phone resource-icon"></i>
+                        <span>الخط الساخن للصحة النفسية: <strong>0220816831</strong></span>
+                    </div>
+                    <div class="resource-item">
+                        <i class="fas fa-ambulance resource-icon"></i>
+                        <span>الإسعاف: <strong>123</strong></span>
+                    </div>
+                    <div class="resource-item">
+                        <i class="fas fa-shield-alt resource-icon"></i>
+                        <span>الشرطة: <strong>122</strong></span>
+                    </div>
+                    <div class="resource-item">
+                        <i class="fas fa-hospital resource-icon"></i>
+                        <span>مستشفى العباسية: <strong>0226336255</strong></span>
+                    </div>
+                </div>
+
+                <!-- Typing Indicator -->
+                <div class="typing-indicator" id="typingIndicator">
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="input-area">
+                    <textarea 
+                        class="message-input" 
+                        id="messageInput" 
+                        placeholder="اكتب رسالتك هنا... (يدعم العربية والإنجليزية)"
+                        rows="1"
+                    ></textarea>
+                    <button class="send-button" id="sendButton">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>TheraBot v1.0.0 - نظام الدعم النفسي الأولي مع أنظمة أمان متكاملة</p>
+            <p class="disclaimer">
+                ⚠️ في حالة الشعور بأفكار انتحارية أو إيذاء النفس، يرجى التواصل فوراً مع الخطوط الساخنة المذكورة أعلاه.
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Application State
+        let currentSessionId = null;
+        let sessionStartTime = null;
+        let messageCount = 0;
+        let safetyLevel = 'safe';
+        let isCrisisMode = false;
+        let typingTimer = null;
+
+        // DOM Elements
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const crisisResources = document.getElementById('crisisResources');
+        
+        // Info elements
+        const sessionIdElement = document.getElementById('sessionId');
+        const sessionDurationElement = document.getElementById('sessionDuration');
+        const sessionStartElement = document.getElementById('sessionStart');
+        const messageCountElement = document.getElementById('messageCount');
+        const safetyLevelElement = document.getElementById('safetyLevel');
+        const safetyKeywordsElement = document.getElementById('safetyKeywords');
+        const safetyConfidenceElement = document.getElementById('safetyConfidence');
+        const crisisStatusElement = document.getElementById('crisisStatus');
+        const therapyStyleElement = document.getElementById('therapyStyle');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeSession();
+            updateWelcomeTime();
+            setupEventListeners();
+            startSessionTimer();
+        });
+
+        function initializeSession() {
+            // Generate session
